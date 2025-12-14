@@ -12,13 +12,9 @@
 
 # Konayuki
 
-A Typora Theme inspired by Konayuki's clean and beautiful scenery.
-
 [中文说明](./README.zh-CN.md)
 
-Konayuki is a Typora theme with a clean, modern look and carefully tuned colors for readability.
-
-The theme is tested on MacOS
+Konayuki is a Typora theme with a clean, modern look and carefully tuned colors for readability, inspired by snowy Hokkaido scenerios.
 
 ## Preview
 
