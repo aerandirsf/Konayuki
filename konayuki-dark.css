@@ -1,0 +1,1517 @@
+/**
+ * Konayuki Dark Remaster Theme for Typora
+ *
+ * Refactor target: `konayuki-round-dark.css`
+ * Goals:
+ * - Consolidate tokens (fonts/colors) at the top
+ * - Merge duplicated `:root` blocks and unify hard-coded colors
+ * - Keep selectors Typora-compatible while reducing redundancy
+ * - Organize by: Tokens → Base → Writing Area → Blocks → Inline → Code → UI → Sidebar → Print
+ */
+
+/* ========================================
+   Tokens (Fonts & Colors First)
+   ======================================== */
+
+:root {
+    /* Fonts */
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+    --font-body: var(--font-ui);
+    --font-heading: var(--font-ui);
+    --font-mono: 'Maple Mono NF CN', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    --monospace: var(--font-mono);
+
+    /* Core Colors (Konayuki Dark / Tokyo Night-ish) */
+    --bg-color: #1a1b26;
+    --text-color: #e5e9f0;
+    --text-muted: #9aa5ce;
+    --text-faint: #565f89;
+    --text-subtle: #a9b1d6;
+
+    --primary-color: #7aa2f7;
+    --primary-color-hover: #93b4ff;
+
+    --border-color: #2a2f45;
+    --table-border-color: #3b4261;
+
+    --code-bg-color: #24283b;
+    --code-text-color: #e5e9f0;
+
+    /* Inline Emphasis */
+    --mark-bg-color: var(--callout-warning);
+    --mark-text-color: var(--bg-color);
+
+    /* Typora UI variables (kept for compatibility) */
+    --side-bar-bg-color: var(--bg-color);
+    --window-border: 1px solid var(--border-color);
+    --active-file-bg-color: #2a2f45;
+    --active-file-text-color: inherit;
+    --active-file-border-color: var(--primary-color);
+    --item-hover-bg-color: #7aa2f714;
+    --item-hover-text-color: var(--primary-color);
+
+    --md-char-color: var(--text-faint);
+    --meta-content-color: var(--text-muted);
+
+    --select-text-bg-color: var(--primary-color);
+    --select-text-font-color: var(--bg-color);
+
+    /* Scrollbar */
+    --scrollbar-thumb-hover: #6b708a;
+
+    /* Radii / Shadows / Motion */
+    --radius-small: 6px;
+    --radius-medium: 8px;
+    --radius-large: 12px;
+    --shadow-small: 0 2px 8px #0000004d;
+    --shadow-medium: 0 4px 16px #00000066;
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+
+    /* Sidebar Palette */
+    --sidebar-bg: var(--bg-color);
+    --sidebar-bg-2: #1f2233;
+    --sidebar-border-strong: var(--border-color);
+    --sidebar-text: var(--text-color);
+    --sidebar-muted: var(--text-muted);
+    --sidebar-accent: var(--primary-color);
+    --sidebar-hover: #7aa2f71f;
+    --sidebar-active: #7aa2f72e;
+    --sidebar-active-gradient-end: #7aa2f738;
+    --sidebar-active-border-color: #7aa2f73d;
+    --sidebar-divider-color: #ffffff0f;
+    --sidebar-input-bg: #7aa2f70f;
+    --sidebar-input-inset-highlight: #ffffff0d;
+    --sidebar-focus-ring-color: #7aa2f72e;
+    --sidebar-shadow: 10px 14px 38px #00000073;
+    --sidebar-active-shadow-color: #0000001f;
+
+    /* Callouts / Alerts */
+    --callout-note: #60a5fa;
+    --callout-note-bg: #60a5fa24;
+    --callout-caution: #fb7185;
+    --callout-caution-bg: #fb718524;
+    --callout-tip: #34d399;
+    --callout-tip-bg: #34d39924;
+    --callout-important: #a78bfa;
+    --callout-important-bg: #a78bfa24;
+    --callout-warning: #fbbf24;
+    --callout-warning-bg: #fbbf2424;
+
+	    /* Tables / Footnotes / TOC */
+	    --table-row-hover-bg: #7aa2f70a;
+	    --footnote-ref-bg: #7aa2f71f;
+	    --toc-bg: #7aa2f70d;
+
+	    /* Table Grid Picker (table insert/resize popover) */
+	    --table-grid-cell-size: 16px;
+	    --table-grid-gap: 2px;
+	    --table-grid-selected-bg: rgba(255, 255, 255, 0.22);
+	    --table-grid-preview-bg: #7aa2f74d;
+	    --table-grid-corner-radius: 6px;
+
+	    /* Syntax Highlight */
+	    --syntax-comment: #526270;
+	    --syntax-keyword: #bb9af7;
+	    --syntax-number: #ff9e64;
+	    --syntax-identifier: #c0f0f5;
+	    --syntax-variable-2: #7dcfff;
+	    --syntax-variable-3: #0db9d7;
+	    --syntax-string: #9ece6a;
+	    --syntax-tag: #f7768e;
+	    --syntax-error-text: #181e24;
+	    --syntax-error-bg: #ff5370;
+
+    /* Buttons */
+    --primary-btn-text-color: var(--bg-color);
+    --primary-btn-border-color: #7aa2f78c;
+}
+
+/* ========================================
+   Base / Global
+   ======================================== */
+
+html {
+    font-size: 16px;
+    background-color: var(--bg-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+    font-family: var(--font-body);
+    color: var(--text-color);
+    line-height: 1.8;
+    margin: 0;
+    padding: 0;
+}
+
+/* On Windows/Linux, the part that is not titlebar/status bar */
+content {
+    background: var(--bg-color);
+}
+
+::selection,
+::-moz-selection {
+    background-color: var(--select-text-bg-color);
+    color: var(--select-text-font-color);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-faint);
+    border-radius: var(--radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* ========================================
+   Writing Area
+   ======================================== */
+
+#write {
+    max-width: 90ch;
+    margin: 0 auto;
+    padding: 60px 20px 120px;
+    font-size: 1rem;
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+#typora-source.focus-mode,
+#write.focus-mode {
+    background-color: var(--bg-color);
+}
+
+/* ========================================
+   Typography (Headings / Paragraphs / HR)
+   ======================================== */
+
+#write h1,
+#write h2,
+#write h3,
+#write h4,
+#write h5,
+#write h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-color);
+    line-height: 1.25;
+    margin: 2.2rem 0 1rem;
+}
+
+#write h1 {
+    font-size: 2.1rem;
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid var(--primary-color);
+    margin-top: 0;
+}
+
+#write h2 {
+    font-size: 1.8rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#write h3 {
+    font-size: 1.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#write h4 {
+    font-size: 1.25rem;
+}
+
+#write h5 {
+    font-size: 1.1rem;
+}
+
+#write h6 {
+    font-size: 1rem;
+    color: var(--text-subtle);
+}
+
+#write p {
+    margin: 1em 0;
+}
+
+#write hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2.5em 0;
+    position: relative;
+}
+
+#write hr:after {
+    content: '✦';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    padding: 0 1em;
+}
+
+/* ========================================
+   Links & Inline Emphasis
+   ======================================== */
+
+#write a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition-fast);
+    border-bottom: 1px solid transparent;
+}
+
+#write a:hover {
+    color: var(--primary-color-hover);
+    border-bottom-color: var(--primary-color-hover);
+}
+
+#write a:focus,
+#write a:active {
+    outline: none;
+}
+
+#write strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+#write em {
+    font-style: italic;
+    color: var(--text-color);
+}
+
+#write code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background-color: var(--code-bg-color);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-small);
+    color: var(--code-text-color);
+}
+
+#write mark {
+    background-color: var(--mark-bg-color);
+    color: var(--mark-text-color);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-small);
+}
+
+#write del {
+    color: var(--text-faint);
+    text-decoration: line-through;
+}
+
+#write sup,
+#write sub {
+    font-size: 0.75em;
+    line-height: 0;
+}
+
+#write sup {
+    vertical-align: super;
+}
+
+#write sub {
+    vertical-align: sub;
+}
+
+/* ========================================
+   Lists (Ordered / Unordered / Task List)
+   ======================================== */
+
+#write ul,
+#write ol {
+    padding-left: 2em;
+    margin: 1em 0;
+}
+
+#write ul {
+    list-style-type: disc;
+}
+
+#write ul ul {
+    list-style-type: circle;
+    margin: 0.5em 0;
+}
+
+#write ol {
+    list-style-type: decimal;
+}
+
+#write ol ol {
+    list-style-type: lower-alpha;
+    margin: 0.5em 0;
+}
+
+#write li {
+    margin: 0.5em 0;
+    line-height: 1.6;
+}
+
+#write .task-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#write .task-list-item {
+    position: relative;
+    padding-left: 2.1rem;
+    margin: 0.45rem 0;
+}
+
+#write .task-list-item input[type="checkbox"] {
+    position: absolute;
+    left: 0;
+    top: 0.14em;
+    width: 1.3em;
+    height: 1.3em;
+    right: -0.1em;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 6px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#write .task-list-item input[type="checkbox"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 8.5l3 3 6-6' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* ========================================
+   Code Fences / Meta Block / Diagrams
+   ======================================== */
+
+#write pre.md-fences,
+#write pre.md-meta-block,
+#write .md-diagram-panel,
+#write .mathjax-block,
+#write [mdtype="math_block"] {
+    background-color: var(--code-bg-color);
+    border-radius: var(--radius-medium);
+    padding: 1.2em;
+    margin: 1.5em 0;
+    box-shadow: var(--shadow-small);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    line-height: 1.6;
+    border: 1px solid var(--border-color);
+    color: var(--code-text-color);
+}
+
+#write pre.md-fences code {
+    background-color: transparent;
+    padding: 0;
+    font-size: 1em;
+}
+
+/* ========================================
+   Blockquotes & Callouts (Alerts)
+   ======================================== */
+
+#write blockquote,
+#write .md-alert,
+.md-alert {
+    --callout-color: var(--callout-note);
+    --callout-bg: var(--callout-note-bg);
+    margin: 1.25rem 0;
+    padding: 0.9rem 1rem;
+    border-left: 4px solid var(--callout-color);
+    background: var(--callout-bg);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-small);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+#write blockquote p,
+#write .md-alert p,
+.md-alert p {
+    margin: 0.5em 0;
+    color: inherit;
+}
+
+#write blockquote cite {
+    color: var(--text-subtle);
+    font-style: italic;
+}
+
+.md-alert.md-alert-note {
+    --callout-color: var(--callout-note);
+    --callout-bg: var(--callout-note-bg);
+    border-left-color: var(--callout-note) !important;
+    background: var(--callout-note-bg) !important;
+}
+
+.md-alert.md-alert-caution {
+    --callout-color: var(--callout-caution);
+    --callout-bg: var(--callout-caution-bg);
+    border-left-color: var(--callout-caution) !important;
+    background: var(--callout-caution-bg) !important;
+}
+
+.md-alert.md-alert-tip {
+    --callout-color: var(--callout-tip);
+    --callout-bg: var(--callout-tip-bg);
+    border-left-color: var(--callout-tip) !important;
+    background: var(--callout-tip-bg) !important;
+}
+
+.md-alert.md-alert-important {
+    --callout-color: var(--callout-important);
+    --callout-bg: var(--callout-important-bg);
+    border-left-color: var(--callout-important) !important;
+    background: var(--callout-important-bg) !important;
+}
+
+.md-alert.md-alert-warning {
+    --callout-color: var(--callout-warning);
+    --callout-bg: var(--callout-warning-bg);
+    border-left-color: var(--callout-warning) !important;
+    background: var(--callout-warning-bg) !important;
+}
+
+.md-alert .md-alert-text {
+    font-weight: 700;
+    margin-top: 0;
+    line-height: 1.2;
+}
+
+.md-alert.md-alert-note .md-alert-text { color: var(--callout-note) !important; }
+.md-alert.md-alert-tip .md-alert-text { color: var(--callout-tip) !important; }
+.md-alert.md-alert-important .md-alert-text { color: var(--callout-important) !important; }
+.md-alert.md-alert-warning .md-alert-text { color: var(--callout-warning) !important; }
+.md-alert.md-alert-caution .md-alert-text { color: var(--callout-caution) !important; }
+
+.md-alert .md-alert-text-container svg {
+    fill: currentColor;
+}
+
+/* ========================================
+   Tables
+   ======================================== */
+
+#write table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 1.5em 0;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+    box-shadow: var(--shadow-small);
+    border: 1px solid var(--table-border-color);
+}
+
+#write thead {
+    background-color: var(--code-bg-color);
+}
+
+#write th {
+    padding: 0.8em 1em;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--table-border-color);
+    border-right: 1px solid var(--table-border-color);
+}
+
+#write td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid var(--table-border-color);
+    border-right: 1px solid var(--table-border-color);
+}
+
+#write tr > :last-child {
+    border-right: none;
+}
+
+#write tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#write tbody tr:hover {
+    background-color: var(--table-row-hover-bg);
+}
+
+.md-table-edit {
+    background-color: var(--side-bar-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-small);
+}
+
+/* Table edit popover: improve contrast for unselected controls (alignment / size etc.) */
+.md-table-edit,
+.md-table-edit * {
+    color: var(--text-color);
+}
+
+.md-table-edit .btn,
+.md-table-edit .btn-default,
+.md-table-edit button {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    box-shadow: none !important;
+}
+
+.md-table-edit .btn:hover,
+.md-table-edit .btn-default:hover,
+.md-table-edit button:hover {
+    background: var(--item-hover-bg-color);
+    color: var(--text-color);
+}
+
+.md-table-edit .btn.active,
+.md-table-edit .btn-default.active,
+.md-table-edit button.active,
+.md-table-edit .btn.btn-primary,
+.md-table-edit .btn-primary {
+    background: var(--primary-color);
+    color: var(--primary-btn-text-color);
+    border-color: var(--primary-btn-border-color);
+}
+
+.md-table-edit .btn:disabled,
+.md-table-edit .btn-default:disabled,
+.md-table-edit button:disabled,
+.md-table-edit .btn.disabled,
+.md-table-edit .btn-default.disabled,
+.md-table-edit button.disabled {
+    opacity: 0.7;
+    color: var(--text-faint);
+}
+
+.md-table-edit input,
+.md-table-edit select {
+    background: var(--sidebar-input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.md-table-edit svg {
+    fill: currentColor;
+}
+
+/* Table size picker (rows × cols): prevent padding/borders from breaking the grid layout */
+table.md-grid-board {
+	    table-layout: fixed;
+	    border-collapse: separate;
+	    border-spacing: var(--table-grid-gap);
+	    font-size: 0;
+	    line-height: 0;
+}
+
+.md-table-resize-popover table.md-grid-board {
+	    border-collapse: separate !important;
+	    border-spacing: var(--table-grid-gap) !important;
+	    background-color: var(--border-color) !important;
+	    padding: var(--table-grid-gap) !important;
+	    border-radius: var(--radius-medium);
+	    -webkit-clip-path: inset(0 round var(--radius-medium));
+	    clip-path: inset(0 round var(--radius-medium));
+	    margin: 8px auto 0 !important;
+	    width: auto !important;
+}
+
+/* Typora's grid preview uses `--item-hover-bg-color`; tune it only inside the resize popover. */
+.md-table-resize-popover {
+	    --item-hover-bg-color: var(--table-grid-preview-bg);
+}
+
+/* The popover content wrapper is square by default; round & clip it so it doesn't "pierce" the outer radius. */
+.md-table-resize-popover > .md-grid-board-wrap {
+	    border-radius: calc(var(--radius-medium) - 1px) !important;
+	    overflow: hidden !important;
+	    background: transparent !important;
+}
+
+/* Remove the thin divider line under the inner grid container (Typora default border/shadow). */
+.md-table-resize-popover table.md-grid-board {
+	    border: 0 !important;
+	    box-shadow: none !important;
+}
+
+.md-table-resize-popover .popover-title {
+	    display: flex !important;
+	    align-items: center !important;
+	    justify-content: center !important;
+	    gap: var(--table-grid-gap) !important;
+	    text-align: center;
+	    border: 0 !important;
+}
+
+/* Ensure the popover content respects the rounded corners (avoid inner rectangular layers "piercing" the border). */
+.md-table-resize-popover.popover > .popover-content,
+.md-table-resize-popover .popover-content {
+	    border-radius: inherit;
+	    overflow: hidden;
+	    background: transparent;
+}
+
+.md-table-resize-popover hr {
+	    display: none !important;
+}
+
+/* Popover arrow: match border/background with the rounded popover container. */
+.md-table-resize-popover.popover.bottom > .arrow,
+.md-table-resize-popover.popover.bottom .arrow {
+	    border-bottom-color: var(--border-color) !important;
+}
+
+.md-table-resize-popover.popover.bottom > .arrow::after,
+.md-table-resize-popover.popover.bottom .arrow::after {
+	    border-bottom-color: var(--side-bar-bg-color) !important;
+}
+
+.md-table-edit .md-grid-board table,
+.md-table-edit .table-grid table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.md-table-edit table.md-grid-board {
+	    border-collapse: separate !important;
+	    border-spacing: var(--table-grid-gap) !important;
+	    background-color: var(--border-color) !important;
+	    padding: var(--table-grid-gap) !important;
+	    border-radius: var(--radius-medium);
+	    -webkit-clip-path: inset(0 round var(--radius-medium));
+	    clip-path: inset(0 round var(--radius-medium));
+	    margin: 8px auto 0 !important;
+	    width: auto !important;
+	    table-layout: fixed;
+}
+
+.md-table-edit .md-grid-board td,
+.md-table-edit .table-grid td {
+	    box-sizing: border-box;
+	    padding: 0 !important;
+	    margin: 0 !important;
+	    width: var(--table-grid-cell-size) !important;
+	    height: var(--table-grid-cell-size) !important;
+	    border: 0 !important;
+	    background-color: var(--bg-color);
+	    box-shadow: none !important;
+	    border-radius: 0 !important;
+	    vertical-align: top;
+	    overflow: hidden;
+}
+
+.md-table-resize-popover table.md-grid-board td {
+	    box-sizing: border-box;
+	    padding: 0 !important;
+	    margin: 0 !important;
+	    width: var(--table-grid-cell-size) !important;
+	    height: var(--table-grid-cell-size) !important;
+	    border: 0 !important;
+	    background-color: var(--bg-color);
+	    box-shadow: none !important;
+	    border-radius: 0 !important;
+	    overflow: hidden;
+}
+
+/* Round the 4 corner cells to match the inner rounded container. */
+.md-table-resize-popover table.md-grid-board tr:first-child td:first-child,
+.md-table-edit table.md-grid-board tr:first-child td:first-child {
+	    border-top-left-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:first-child td:last-child,
+.md-table-edit table.md-grid-board tr:first-child td:last-child {
+	    border-top-right-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:last-child td:first-child,
+.md-table-edit table.md-grid-board tr:last-child td:first-child {
+	    border-bottom-left-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:last-child td:last-child,
+.md-table-edit table.md-grid-board tr:last-child td:last-child {
+	    border-bottom-right-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:first-child td:first-child > a,
+.md-table-edit table.md-grid-board tr:first-child td:first-child > a {
+	    border-top-left-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:first-child td:last-child > a,
+.md-table-edit table.md-grid-board tr:first-child td:last-child > a {
+	    border-top-right-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:last-child td:first-child > a,
+.md-table-edit table.md-grid-board tr:last-child td:first-child > a {
+	    border-bottom-left-radius: var(--table-grid-corner-radius) !important;
+}
+
+.md-table-resize-popover table.md-grid-board tr:last-child td:last-child > a,
+.md-table-edit table.md-grid-board tr:last-child td:last-child > a {
+	    border-bottom-right-radius: var(--table-grid-corner-radius) !important;
+}
+
+/* Remove Typora's inner "corner" glyphs/backgrounds for the grid cells (we use border-spacing lines instead). */
+.md-table-resize-popover table.md-grid-board td,
+.md-table-edit table.md-grid-board td {
+	    background-image: none !important;
+}
+
+.md-table-resize-popover table.md-grid-board td::before,
+.md-table-resize-popover table.md-grid-board td::after,
+.md-table-edit table.md-grid-board td::before,
+.md-table-edit table.md-grid-board td::after {
+	    content: none !important;
+	    display: none !important;
+}
+
+/* Some Typora builds render inner buttons/divs inside each cell; force them to fill the cell without their own borders. */
+.md-table-resize-popover table.md-grid-board td > * {
+	    display: block !important;
+	    width: 100% !important;
+	    height: 100% !important;
+	    margin: 0 !important;
+	    padding: 0 !important;
+	    border: 0 !important;
+	    box-shadow: none !important;
+	    outline: none !important;
+	    box-sizing: border-box !important;
+}
+
+/* Hover/drag preview highlight is often applied as an inline background on the inner element. */
+.md-table-resize-popover table.md-grid-board td > *[style*="background"] {
+	    background: var(--table-grid-preview-bg) !important;
+}
+
+.md-table-resize-popover table.md-grid-board td[style*="background"] {
+	    background: var(--table-grid-preview-bg) !important;
+}
+
+/* Typora hover/drag preview highlight: many builds toggle `md-active` on the inner <a>. */
+.md-table-resize-popover table.md-grid-board td > a {
+	    background: transparent !important;
+}
+
+.md-table-resize-popover table.md-grid-board td > a.md-active,
+.md-table-resize-popover table.md-grid-board a.md-active {
+	    background: var(--table-grid-preview-bg) !important;
+}
+
+/* Selected area: Typora uses `.md-grid-ext` to mark the current rows×cols preview. */
+.md-table-edit table.md-grid-board td.md-grid-ext,
+.md-table-edit .md-grid-board td.md-grid-ext {
+	    background: var(--table-grid-selected-bg) !important;
+}
+
+/* Also apply selection highlight when the grid appears outside `.md-table-edit` (Typora variants). */
+table.md-grid-board td.md-grid-ext,
+.md-grid-board td.md-grid-ext {
+	    background: var(--table-grid-selected-bg) !important;
+}
+
+/* Hover preview: keep the hovered cell consistent with the preview block color. */
+.md-table-resize-popover table.md-grid-board td:hover {
+	    background: var(--bg-color) !important;
+}
+
+.md-table-resize-popover table.md-grid-board td:hover > a {
+	    background: var(--table-grid-preview-bg) !important;
+}
+
+/* Some builds toggle aria-selected during hover/drag. */
+.md-table-resize-popover table.md-grid-board td[aria-selected="true"] > a {
+	    background: var(--table-grid-preview-bg) !important;
+}
+.md-table-edit .md-grid-board .btn,
+.md-table-edit .md-grid-board .btn-default,
+.md-table-edit .md-grid-board button,
+.md-table-edit .table-grid .btn,
+.md-table-edit .table-grid .btn-default,
+.md-table-edit .table-grid button {
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    background: transparent;
+    box-sizing: border-box;
+    outline: none !important;
+    transform: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+.md-table-resize-popover .md-grid-board-info,
+.md-table-edit .md-grid-board .md-grid-board-info,
+.md-table-edit .table-grid .md-grid-board-info {
+	    display: flex !important;
+	    align-items: center;
+	    justify-content: center;
+	    gap: var(--table-grid-gap);
+	    margin-top: 10px !important;
+	    font-size: 14px !important;
+	    line-height: 1.2 !important;
+	    color: var(--text-muted) !important;
+	    font-variant-numeric: tabular-nums;
+}
+
+.md-table-resize-popover .md-grid-board-info > :first-child,
+.md-table-resize-popover .md-grid-board-info > :last-child,
+.md-table-edit .md-grid-board .md-grid-board-info > :first-child,
+.md-table-edit .md-grid-board .md-grid-board-info > :last-child,
+.md-table-edit .table-grid .md-grid-board-info > :first-child,
+.md-table-edit .table-grid .md-grid-board-info > :last-child {
+	    min-width: 2.1em;
+	    padding: 0.25em 0.55em;
+	    border-radius: 10px;
+	    border: 1px solid var(--border-color) !important;
+	    background: var(--code-bg-color) !important;
+	    color: var(--text-color) !important;
+	    font-weight: 700;
+	    text-align: center;
+}
+
+/* Fallback: some builds use inputs for the size display (e.g. "3 × 4"). */
+.md-table-resize-popover input {
+	    -webkit-appearance: none !important;
+	    appearance: none !important;
+	    font-size: 14px !important;
+	    font-weight: 700 !important;
+	    line-height: 2.2em !important;
+	    color: var(--text-color) !important;
+	    background: var(--code-bg-color) !important;
+	    border: 1px solid var(--border-color) !important;
+	    border-radius: 10px !important;
+	    padding: 0 0.7em !important;
+	    width: auto !important;
+	    min-width: 2.8em !important;
+	    height: 2.2em !important;
+	    text-align: center;
+	    box-sizing: border-box !important;
+	    font-variant-numeric: tabular-nums;
+	    box-shadow: none !important;
+	    vertical-align: middle !important;
+}
+
+/* Normalize the spacing around the "×" separator. */
+.md-table-resize-popover input:first-of-type {
+	    margin-right: var(--table-grid-gap) !important;
+}
+
+.md-table-resize-popover input:last-of-type {
+	    margin-left: var(--table-grid-gap) !important;
+}
+
+.md-table-resize-popover input + * {
+	    margin-left: var(--table-grid-gap) !important;
+}
+
+/* Remove spin buttons for number inputs (keeps both inputs visually consistent). */
+.md-table-resize-popover input[type="number"]::-webkit-outer-spin-button,
+.md-table-resize-popover input[type="number"]::-webkit-inner-spin-button {
+	    -webkit-appearance: none;
+	    margin: 0;
+}
+
+.md-table-resize-popover input[type="number"] {
+	    -moz-appearance: textfield;
+}
+
+/* ========================================
+   Images
+   ======================================== */
+
+#write img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5em auto;
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-medium);
+    border: none !important;
+    outline: none !important;
+}
+
+/* Typora wraps images with `.md-image`; remove the default frame/padding (often appears as side borders) */
+#write .md-image,
+#write .md-image > img {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+}
+
+#write .md-image > .md-meta {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* ========================================
+   Footnotes / Definition Links / TOC
+   ======================================== */
+
+#write .md-footnote {
+    color: var(--primary-color);
+    background-color: var(--footnote-ref-bg);
+    padding: 0 0.3em;
+    border-radius: var(--radius-small);
+    cursor: pointer;
+}
+
+#write .md-def-footnote {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px dashed var(--border-color);
+    font-size: 0.9em;
+    color: var(--text-subtle);
+}
+
+#write .md-def-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--primary-color);
+}
+
+#write .md-def-link:hover {
+    border-bottom-style: solid;
+}
+
+#write .md-toc {
+    background-color: var(--toc-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-medium);
+    padding: 1.5em;
+    margin: 1.5em 0;
+    box-shadow: var(--shadow-small);
+}
+
+#write .md-toc a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+#write .md-toc a:hover {
+    color: var(--primary-color);
+    padding-left: 0.5em;
+}
+
+/* ========================================
+   Syntax Highlight (CodeMirror inner)
+   ======================================== */
+
+#write .CodeMirror-selected,
+#write .CodeMirror-linebackground,
+#write pre.CodeMirror-line .CodeMirror-linebackground,
+#write .CodeMirror-code .CodeMirror-activeline,
+#write .CodeMirror-activeline .CodeMirror-linebackground {
+    background: var(--active-file-bg-color) !important;
+}
+
+	#write .cm-s-inner .cm-comment {
+	    color: var(--syntax-comment);
+	    font-style: italic;
+	}
+
+#write .cm-s-inner .cm-keyword {
+    color: var(--syntax-keyword);
+    font-weight: 600;
+}
+#write .cm-s-inner .cm-atom,
+#write .cm-s-inner .cm-number {
+    color: var(--syntax-number);
+}
+#write .cm-s-inner .cm-def,
+#write .cm-s-inner .cm-variable {
+    color: var(--syntax-identifier);
+}
+
+#write .cm-s-inner .cm-variable-2 {
+    color: var(--syntax-variable-2);
+}
+
+#write .cm-s-inner .cm-variable-3 {
+    color: var(--syntax-variable-3);
+}
+
+#write .cm-s-inner .cm-string {
+    color: var(--syntax-string);
+}
+
+	#write .cm-s-inner .cm-property {
+	    color: var(--syntax-variable-2);
+	}
+
+#write .cm-s-inner .cm-operator {
+    color: var(--syntax-identifier);
+}
+
+#write .cm-s-inner .cm-tag {
+    color: var(--syntax-tag);
+}
+
+#write .cm-s-inner .cm-attribute {
+    color: var(--syntax-number);
+}
+
+	#write .cm-s-inner .cm-meta {
+	    color: var(--syntax-comment);
+	}
+
+#write .cm-s-inner .cm-builtin {
+    color: var(--syntax-variable-3);
+}
+
+#write .cm-s-inner .cm-quote {
+    color: var(--syntax-string);
+}
+
+	#write .cm-s-inner .cm-hr {
+	    color: var(--syntax-comment);
+	}
+
+#write .cm-s-inner .cm-link {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+#write .cm-s-inner .cm-error {
+    color: var(--syntax-error-text);
+    background: var(--syntax-error-bg);
+}
+
+/* ========================================
+   Source Code Mode (Typora / CodeMirror)
+   ======================================== */
+
+#typora-source .cm-header-1 {
+    font-size: 1.625rem;
+    color: var(--text-color);
+}
+
+#typora-source .cm-header-2 {
+    font-size: 1.375rem;
+    color: var(--text-color);
+}
+
+#typora-source .cm-header-3 {
+    font-size: 1.125rem;
+    color: var(--text-color);
+}
+
+#typora-source .cm-header-4 {
+    font-size: 1.0625rem;
+    color: var(--text-color);
+}
+
+#typora-source .cm-header-5 {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+#typora-source .cm-header-6 {
+    font-size: 0.9375rem;
+    color: var(--text-subtle);
+}
+
+#typora-source .cm-strong {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+#typora-source .cm-em {
+    color: var(--text-color);
+    font-style: italic;
+}
+
+#typora-source .cm-link {
+    color: var(--primary-color);
+}
+
+#typora-source .cm-string {
+    color: var(--syntax-string);
+}
+
+	#typora-source .cm-comment {
+	    color: var(--syntax-comment);
+	    font-style: italic;
+	}
+
+/* ========================================
+   Control UI (Panels / Dialogs / Buttons)
+   ======================================== */
+
+#outline-dropmenu,
+#typora-quick-open,
+#md-searchpanel,
+.modal-content,
+.popover,
+.context-menu {
+    background-color: var(--side-bar-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-medium);
+    color: var(--text-color);
+}
+
+#write div.md-toc-tooltip {
+    background-color: var(--side-bar-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-small);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: 100%;
+    max-width: 90ch;
+    margin: 0 !important;
+    padding: 10px 12px;
+    min-height: 44px;
+}
+
+/* TOC popover/button sizing (avoid an oversized "trash" button) */
+#write div.md-toc-tooltip .btn,
+#write div.md-toc-tooltip .btn-default,
+#write div.md-toc-tooltip button,
+#write .md-toc .btn,
+#write .md-toc .btn-default,
+#toc-dropmenu .btn,
+#toc-dropmenu .btn-default {
+    padding: 6px 10px;
+    min-width: 34px;
+    min-height: 34px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+#write div.md-toc-tooltip .btn:hover,
+#write div.md-toc-tooltip .btn-default:hover,
+#write .md-toc .btn:hover,
+#write .md-toc .btn-default:hover,
+#toc-dropmenu .btn:hover,
+#toc-dropmenu .btn-default:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+#toc-dropmenu {
+    background-color: var(--side-bar-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn,
+.btn-default {
+    background-color: var(--primary-color);
+    color: var(--primary-btn-text-color);
+    border: 1px solid var(--primary-btn-border-color);
+    border-radius: var(--radius-small);
+    padding: 0.5em 1em;
+    transition: var(--transition-fast);
+}
+
+.btn:hover,
+.btn-default:hover {
+    background-color: var(--primary-color-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-small);
+}
+
+/* ========================================
+   Sidebar - Slate Card Style
+   ======================================== */
+
+#typora-sidebar,
+.sidebar {
+    background: linear-gradient(160deg, var(--sidebar-bg), var(--sidebar-bg-2));
+    color: var(--sidebar-text);
+    border: 1px solid var(--sidebar-border-strong);
+    border-radius: var(--radius-large);
+    margin: 8px;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+    height: calc(100vh - 16px);
+    max-height: calc(100vh - 16px);
+    padding: 12px 10px 14px;
+    box-shadow: var(--sidebar-shadow);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.sidebar-content,
+.sidebar #sidebar-content,
+#typora-sidebar #sidebar-content {
+    background: transparent;
+    color: var(--sidebar-text);
+}
+
+.sidebar-tabs,
+.sidebar-tabs .tab-bar,
+#typora-sidebar .sidebar-footer,
+.sidebar .sidebar-footer {
+    background: transparent;
+    border-top: 1px solid var(--sidebar-divider-color);
+}
+
+#typora-sidebar .sidebar-footer,
+.sidebar .sidebar-footer {
+    color: var(--sidebar-muted);
+    /* Match `konayuki-round-dark.css`: integrated footer, no separate "card" */
+    padding-top: 10px;
+}
+
+/* File-list mode: make footer layout match file-tree mode (avoid absolute/fixed positioning differences) */
+#typora-sidebar.use-file-list-style {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#typora-sidebar.use-file-list-style > .sidebar-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+}
+
+#typora-sidebar.use-file-list-style > #ty-sidebar-footer {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    top: auto !important;
+}
+
+.sidebar-tab,
+.sidebar-tab:hover {
+    color: var(--sidebar-muted);
+}
+
+.sidebar-tab.active,
+.sidebar-tab-active,
+.sidebar-tab.active:hover {
+    color: var(--sidebar-text);
+    border-bottom: 2px solid var(--sidebar-accent);
+}
+
+.sidebar input[type="text"],
+#typora-sidebar input[type="text"] {
+    background: var(--sidebar-input-bg);
+    color: var(--sidebar-text);
+    border: 1px solid var(--sidebar-border-strong);
+    border-radius: 12px;
+    padding: 0.45rem 0.75rem;
+    box-shadow: inset 0 1px 0 var(--sidebar-input-inset-highlight);
+}
+
+.sidebar input[type="text"]::placeholder {
+    color: var(--sidebar-muted);
+}
+
+.sidebar input[type="text"]:focus {
+    border-color: var(--sidebar-accent);
+    box-shadow: 0 0 0 3px var(--sidebar-focus-ring-color);
+}
+
+/* Prevent horizontal scrollbar for long filenames/titles */
+#typora-sidebar #sidebar-content,
+#typora-sidebar .sidebar-content {
+    overflow-x: hidden;
+}
+
+#typora-sidebar .file-node-content,
+#typora-sidebar .file-list-item,
+#typora-sidebar .outline-item {
+    overflow-x: hidden;
+}
+
+#typora-sidebar .file-node-title,
+#typora-sidebar .file-name,
+#typora-sidebar .file-list-item-file-name,
+#typora-sidebar .outline-label {
+    display: inline-block;
+    max-width: 100%;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+}
+
+#typora-sidebar .file-list-item,
+#typora-sidebar .file-node-content,
+#typora-sidebar .outline-item {
+    display: block;
+    color: var(--sidebar-muted);
+    border-radius: 12px;
+    transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#typora-sidebar .file-list-item.active,
+#typora-sidebar .file-node-content.active,
+#typora-sidebar .file-node-content.active .file-node-title,
+#typora-sidebar .outline-item.active,
+#typora-sidebar .outline-item-active {
+    color: var(--sidebar-text);
+    padding: 12px 18px;
+    background: linear-gradient(90deg, var(--sidebar-active), var(--sidebar-active-gradient-end));
+    border: 1px solid var(--sidebar-active-border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 22px var(--sidebar-active-shadow-color);
+}
+
+/* Keep active item stable on hover (avoid Typora default hover padding/radius overrides) */
+#typora-sidebar .file-list-item.active:hover,
+#typora-sidebar .file-node-content.active:hover,
+#typora-sidebar .outline-item.active:hover,
+#typora-sidebar .outline-item-active:hover {
+    padding: 12px 18px;
+    border-radius: 12px;
+}
+
+/* Hover effect: underline text only (no background/padding shift) */
+#typora-sidebar .file-list-item:hover .file-node-title,
+#typora-sidebar .file-node-content:hover .file-node-title,
+#typora-sidebar .file-list-item:hover .file-list-item-file-name,
+#typora-sidebar .file-node-content:hover .file-list-item-file-name,
+#typora-sidebar .file-list-item:hover .file-name,
+#typora-sidebar .file-node-content:hover .file-name,
+#typora-sidebar .outline-item:hover .outline-label,
+#typora-sidebar .outline-item-active:hover .outline-label,
+#typora-sidebar .file-list-item.active:hover .file-node-title,
+#typora-sidebar .file-node-content.active:hover .file-node-title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+#typora-sidebar .sidebar-footer button,
+#typora-sidebar .sidebar-footer .sidebar-footer-btn,
+#typora-sidebar .sidebar-footer .sidebar-footer-item,
+#typora-sidebar .sidebar-footer .footer-item {
+    color: var(--sidebar-muted);
+    background: transparent;
+}
+
+/* Sidebar popovers / context menus */
+#typora-sidebar .context-menu,
+#typora-sidebar .popover,
+#typora-sidebar .dropdown-menu,
+#typora-sidebar .modal-content {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border-strong);
+    border-radius: 10px;
+    box-shadow: var(--sidebar-shadow);
+    backdrop-filter: none;
+    margin: 0 1px 3px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#typora-sidebar .context-menu hr,
+#typora-sidebar .popover hr,
+#typora-sidebar .dropdown-menu hr {
+    border-color: var(--sidebar-divider-color);
+}
+
+#typora-sidebar .context-menu li,
+#typora-sidebar .popover li,
+#typora-sidebar .dropdown-menu li {
+    border-radius: 8px;
+    margin: 0 4px 4px;
+}
+
+#typora-sidebar .context-menu li:hover,
+#typora-sidebar .popover li:hover,
+#typora-sidebar .dropdown-menu li:hover {
+    background: var(--sidebar-hover);
+}
+
+#typora-sidebar .context-menu .nav-group-title,
+#typora-sidebar .popover .nav-group-title,
+#typora-sidebar .dropdown-menu .nav-group-title {
+    border: 1px solid var(--sidebar-border-strong);
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: transparent;
+}
+
+#typora-sidebar .context-menu li,
+#typora-sidebar .popover li {
+    overflow: hidden;
+}
+
+#typora-sidebar .context-menu li .file-node-title,
+#typora-sidebar .popover li .file-node-title,
+#typora-sidebar .context-menu li .file-name,
+#typora-sidebar .popover li .file-name {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ========================================
+   Print
+   ======================================== */
+
+@media print {
+    .typora-export * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    #write {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    #write h1,
+    #write h2,
+    #write h3 {
+        page-break-after: avoid;
+    }
+
+    #write pre,
+    #write blockquote,
+    #write table,
+    #write img {
+        page-break-inside: avoid;
+    }
+}

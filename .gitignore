@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Typora demo artifacts (optional)
+*.html
+
+# Local helper script (keep it for yourself)
+update.bash
+
+# Editor/IDE
+.vscode/
+.idea/
