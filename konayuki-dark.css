@@ -1318,6 +1318,43 @@ table.md-grid-board td.md-grid-ext,
     top: auto !important;
 }
 
+/* Windows: keep footer absolute, but reserve space so it doesn't cover content */
+body.os-windows #typora-sidebar #sidebar-content,
+body.os-windows #typora-sidebar .sidebar-content,
+body.os-windows .sidebar #sidebar-content,
+body.os-windows .sidebar .sidebar-content,
+body.os-windows-10 #typora-sidebar #sidebar-content,
+body.os-windows-10 #typora-sidebar .sidebar-content,
+body.os-windows-10 .sidebar #sidebar-content,
+body.os-windows-10 .sidebar .sidebar-content {
+    left: 0;
+    right: 0;
+    bottom: 48px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+body.os-windows #typora-sidebar > #ty-sidebar-footer,
+body.os-windows .sidebar .sidebar-footer,
+body.os-windows-10 #typora-sidebar > #ty-sidebar-footer,
+body.os-windows-10 .sidebar .sidebar-footer {
+    height: 48px;
+}
+
+body.os-windows #typora-sidebar.use-file-list-style,
+body.os-windows-10 #typora-sidebar.use-file-list-style {
+    position: relative;
+}
+
+body.os-windows #typora-sidebar.use-file-list-style > #ty-sidebar-footer,
+body.os-windows-10 #typora-sidebar.use-file-list-style > #ty-sidebar-footer {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+}
+
 .sidebar-tab,
 .sidebar-tab:hover {
     color: var(--sidebar-muted);
