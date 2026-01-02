@@ -1448,6 +1448,10 @@ body.os-windows-10 #typora-sidebar.use-file-list-style > #ty-sidebar-footer {
     visibility: hidden;
 }
 
+body.no-collapse-outline #typora-sidebar .outline-expander {
+    visibility: hidden;
+}
+
 #typora-sidebar .outline-label {
     flex: 1 1 auto;
     min-width: 0;
