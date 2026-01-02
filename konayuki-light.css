@@ -1384,6 +1384,39 @@ table.md-grid-board td.md-grid-ext,
     transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
+#typora-sidebar .outline-item {
+    display: flex;
+    align-items: center;
+}
+
+#typora-sidebar .outline-expander {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    width: 16px;
+    min-width: 16px;
+    flex: 0 0 16px;
+}
+
+#typora-sidebar .outline-expander::before,
+#typora-sidebar .outline-expander-icon {
+    display: block;
+    line-height: 1;
+    transform: translateY(0.5px);
+}
+
+#typora-sidebar .outline-item-wrapper.outline-item-single > .outline-item .outline-expander,
+#typora-sidebar .outline-item-wrapper.outline-item-signle > .outline-item .outline-expander,
+#typora-sidebar .outline-item-wrapper:not(:has(> .outline-children > .outline-item-wrapper)) > .outline-item .outline-expander {
+    visibility: hidden;
+}
+
+#typora-sidebar .outline-label {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 #typora-sidebar .file-list-item.active,
 #typora-sidebar .file-node-content.active,
 #typora-sidebar .file-node-content.active .file-node-title,
