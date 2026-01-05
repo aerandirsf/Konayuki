@@ -1562,6 +1562,98 @@ body.no-collapse-outline #typora-sidebar .outline-expander {
 }
 
 /* ========================================
+   Search Panel
+   ======================================== */
+
+/* Add horizontal padding and floating effect */
+#md-searchpanel {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    border-radius: var(--radius-medium) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* All action buttons - theme color fill */
+#md-searchpanel .input-group-addon.btn {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-btn-text-color) !important;
+    border-color: var(--primary-color) !important;
+    border-radius: var(--radius-small) !important;
+    text-align: center !important;
+}
+
+#md-searchpanel .input-group-addon.btn:hover {
+    background-color: var(--primary-color-hover) !important;
+}
+
+/* Search option buttons (Aa, 词, .*) - unselected state */
+#md-searchpanel .searchpanel-search-option-btn {
+    background-color: transparent !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+    border-radius: var(--radius-small) !important;
+}
+
+#md-searchpanel .searchpanel-search-option-btn:hover {
+    background-color: var(--side-bar-bg-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Search option buttons - selected state */
+#md-searchpanel .searchpanel-search-option-btn.active,
+#md-searchpanel .searchpanel-search-option-btn.select {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-btn-text-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Input fields */
+#md-searchpanel input.form-control {
+    border-radius: var(--radius-small) !important;
+}
+
+#md-searchpanel input.form-control:focus {
+    border-color: var(--primary-color) !important;
+}
+
+/* Right side buttons spacing */
+#md-searchpanel #search-panel-prev,
+#md-searchpanel #search-panel-replaceall-btn {
+    margin-left: 8px !important;
+}
+
+#md-searchpanel #search-panel-next,
+#md-searchpanel #search-panel-replace-btn {
+    margin-left: 4px !important;
+}
+
+/* Navigation buttons - uniform size */
+#md-searchpanel #search-panel-prev,
+#md-searchpanel #search-panel-next {
+    min-width: 32px !important;
+    padding: 0 !important;
+    border: 1px solid var(--primary-color) !important;
+}
+
+/* Replace action buttons - uniform width */
+#md-searchpanel #search-panel-replaceall-btn,
+#md-searchpanel #search-panel-replace-btn {
+    min-width: 48px !important;
+    padding: 0 8px !important;
+    border: 1px solid var(--primary-color) !important;
+}
+
+/* Close button */
+#md-searchpanel .close-btn {
+    margin-left: 12px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+}
+
+/* ========================================
    Print
    ======================================== */
 
